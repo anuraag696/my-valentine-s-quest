@@ -1,0 +1,176 @@
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate, useParams } from "react-router-dom";
+import { useCelebration } from "@/hooks/useCelebration";
+import { Heart, Sparkles, ArrowRight } from "lucide-react";
+import FloatingPetals from "@/components/FloatingPetals";
+
+interface QuestionData {
+  question: string;
+  options: string[];
+  celebration: string;
+}
+
+const questions: QuestionData[] = [
+  {
+    question: "Do you remember the first thing that made you smile about me?",
+    options: [
+      "Your terrible jokes, honestly",
+      "The way you looked at me",
+      "I don't remember, but I haven't stopped since",
+    ],
+    celebration: "Every smile you've given me is a treasure I hold close. 🥰",
+  },
+  {
+    question: "If we could relive one moment together, which would you choose?",
+    options: [
+      "Our first conversation",
+      "The moment we realized it was real",
+      "Every quiet moment we've shared",
+    ],
+    celebration: "I'd relive every single second with you — no hesitation. ✨",
+  },
+  {
+    question: "Would you share your last bite of food with me?",
+    options: [
+      "Absolutely, you can have it all",
+      "Only if you make that puppy face",
+      "Fine… but I'm taking a big bite first",
+    ],
+    celebration: "The fact that you'd even consider it means the world! 🍰",
+  },
+  {
+    question: "On a scale of amazing to extraordinary, how lucky am I to have you?",
+    options: [
+      "Extraordinarily lucky",
+      "You don't even deserve me (jk… maybe)",
+      "Lucky enough that you better not mess it up",
+    ],
+    celebration: "I already know the answer — infinitely lucky. 💫",
+  },
+];
+
+const QuestionPage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { fireHearts } = useCelebration();
+  const [selected, setSelected] = useState<number | null>(null);
+  const [showCelebration, setShowCelebration] = useState(false);
+
+  const questionIndex = parseInt(id || "1") - 1;
+  const question = questions[questionIndex];
+  const isLast = questionIndex === questions.length - 1;
+
+  if (!question) {
+    navigate("/");
+    return null;
+  }
+
+  const handleSelect = (index: number) => {
+    if (selected !== null) return;
+    setSelected(index);
+    setShowCelebration(true);
+    fireHearts();
+  };
+
+  const handleNext = () => {
+    if (isLast) {
+      navigate("/apology");
+    } else {
+      navigate(`/questions/${questionIndex + 2}`);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-romantic flex flex-col items-center justify-center px-6 relative overflow-hidden">
+      <FloatingPetals count={8} />
+
+      {/* Progress */}
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 flex gap-2">
+        {questions.map((_, i) => (
+          <div
+            key={i}
+            className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${
+              i <= questionIndex ? "bg-primary scale-110" : "bg-border"
+            }`}
+          />
+        ))}
+      </div>
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={questionIndex}
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -40 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-lg w-full text-center z-10"
+        >
+          <motion.p className="text-sm text-muted-foreground mb-2 font-body">
+            Question {questionIndex + 1} of {questions.length}
+          </motion.p>
+
+          <h2 className="text-2xl md:text-3xl font-display font-semibold text-foreground mb-8 leading-snug">
+            {question.question}
+          </h2>
+
+          <div className="space-y-3 mb-8">
+            {question.options.map((option, i) => (
+              <motion.button
+                key={i}
+                onClick={() => handleSelect(i)}
+                className={`w-full px-6 py-4 rounded-xl text-left font-body transition-all duration-300 border ${
+                  selected === i
+                    ? "bg-primary text-primary-foreground border-primary shadow-glow"
+                    : selected !== null
+                    ? "bg-muted/50 text-muted-foreground border-border opacity-50"
+                    : "bg-gradient-card text-foreground border-border hover:border-primary/50 hover:shadow-romantic"
+                }`}
+                whileHover={selected === null ? { scale: 1.02 } : {}}
+                whileTap={selected === null ? { scale: 0.98 } : {}}
+              >
+                <span className="flex items-center gap-3">
+                  <span className="text-sm text-muted-foreground font-display">
+                    {String.fromCharCode(65 + i)}.
+                  </span>
+                  {option}
+                </span>
+              </motion.button>
+            ))}
+          </div>
+
+          <AnimatePresence>
+            {showCelebration && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-6"
+              >
+                <div className="flex items-center justify-center gap-2 text-primary">
+                  <Sparkles className="w-5 h-5" />
+                  <p className="font-body italic text-sm md:text-base">
+                    {question.celebration}
+                  </p>
+                  <Sparkles className="w-5 h-5" />
+                </div>
+
+                <motion.button
+                  onClick={handleNext}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full font-display shadow-romantic hover:shadow-glow transition-all duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {isLast ? "Continue" : "Next Question"}
+                  <ArrowRight className="w-4 h-4" />
+                </motion.button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+};
+
+export default QuestionPage;
