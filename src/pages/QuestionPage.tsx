@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCelebration } from "@/hooks/useCelebration";
@@ -60,6 +60,12 @@ const QuestionPage = () => {
   const questionIndex = parseInt(id || "1") - 1;
   const question = questions[questionIndex];
   const isLast = questionIndex === questions.length - 1;
+
+  // Reset state when question changes
+  useEffect(() => {
+    setSelected(null);
+    setShowCelebration(false);
+  }, [questionIndex]);
 
   if (!question) {
     navigate("/");
