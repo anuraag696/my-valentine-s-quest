@@ -15,18 +15,18 @@ const questions: QuestionData[] = [
   {
     question: "Do you remember the first thing that made you smile about me?",
     options: [
-      "Your terrible jokes, honestly",
       "The way you looked at me",
-      "I don't remember, but I haven't stopped since",
+      "You being the Maths Wizard",
+      "Your attitude",
     ],
     celebration: "Every smile you've given me is a treasure I hold close. 🥰",
   },
   {
     question: "If we could relive one moment together, which would you choose?",
     options: [
-      "Our first conversation",
-      "The moment we realized it was real",
-      "Every quiet moment we've shared",
+      "The days we ranted about the world",
+      "The day I bought you the bouquet for the first time",
+      "Every quiet moment we shared",
     ],
     celebration: "I'd relive every single second with you — no hesitation. ✨",
   },
@@ -34,8 +34,8 @@ const questions: QuestionData[] = [
     question: "Would you share your last bite of food with me?",
     options: [
       "Absolutely, you can have it all",
-      "Only if you make that puppy face",
-      "Fine… but I'm taking a big bite first",
+      "Okay, but not the last bite of the cone of my Ice-cream",
+      "Fine... but I'm taking a big bite",
     ],
     celebration: "The fact that you'd even consider it means the world! 🍰",
   },
@@ -43,8 +43,8 @@ const questions: QuestionData[] = [
     question: "On a scale of amazing to extraordinary, how lucky am I to have you?",
     options: [
       "Extraordinarily lucky",
-      "You don't even deserve me (jk… maybe)",
-      "Lucky enough that you better not mess it up",
+      "You don't even deserve me (jk... maybe)",
+      "Lucky enough that you disappoint me every second",
     ],
     celebration: "I already know the answer — infinitely lucky. 💫",
   },
